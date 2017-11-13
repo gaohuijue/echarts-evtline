@@ -1,5 +1,6 @@
 var PROD = process.argv.indexOf('-p') >= 0;
 var webpack = require('webpack');
+var babel = require('babel-core');
 
 module.exports = {
     entry: {
@@ -23,5 +24,22 @@ module.exports = {
         new webpack.optimize.UglifyJsPlugin({
             compress: { warnings: false }
         })
-    ] : []
+    ] : [],
+    module: {
+        rules: [{
+            test: /\.js$/,
+            loader: 'babel-loader',
+            include: [resolve('src'), resolve('test')]
+        }],
+        loaders: [
+            {
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
+                loader: 'babel',
+                query: {
+                    presets: ['es2015']
+                }
+            }
+        ]
+    }
 };

@@ -18,7 +18,6 @@
     "url": "https://github.com/ecomfe/echarts-liquidfill"
   },
   "devDependencies": {
-    "webpack": "^1.13.3",
-    "webpack-link": "^0.2.0"
+    "webpack": "^3.6.0"
   }
 }
