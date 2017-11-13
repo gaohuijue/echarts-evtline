@@ -575,11 +575,11 @@ echarts.extendChartView({
         };
 
         //绑定事件
-        if (option.onmouseover && Object.prototype.toString.call(option.onmouseover) === '[object Function]') {
-            polyline.on('mouseover', option.onmouseover);
+        if (seriesModel.onmouseover && Object.prototype.toString.call(seriesModel.onmouseover) === '[object Function]') {
+            polyline.on('mouseover', seriesModel.onmouseover);
         }
-        if (option.onmouseout && Object.prototype.toString.call(option.onmouseout) === '[object Function]') {
-            polyline.on('mouseout', option.onmouseout);
+        if (seriesModel.onmouseout && Object.prototype.toString.call(seriesModel.onmouseout) === '[object Function]') {
+            polyline.on('mouseout', seriesModel.onmouseout);
         }
 
         return polyline;
