@@ -1,6 +1,5 @@
 var PROD = process.argv.indexOf('-p') >= 0;
 var webpack = require('webpack');
-var babel = require('babel-core');
 
 module.exports = {
     entry: {
@@ -26,16 +25,11 @@ module.exports = {
         })
     ] : [],
     module: {
-        rules: [{
-            test: /\.js$/,
-            loader: 'babel-loader',
-            include: [resolve('src'), resolve('test')]
-        }],
         loaders: [
             {
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
-                loader: 'babel',
+                loader: 'babel-loader',
                 query: {
                     presets: ['es2015']
                 }
