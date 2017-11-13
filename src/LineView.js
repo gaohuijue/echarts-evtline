@@ -6,8 +6,9 @@ import SymbolClz from './Symbol';
 import lineAnimationDiff from './lineAnimationDiff';
 import * as graphic from 'echarts/lib/util/graphic';
 import * as modelUtil from 'echarts/lib/util/model';
-import {Polyline, Polygon} from './poly';
+import {Polygon, Polyline} from './poly';
 import ChartView from 'echarts/lib/view/Chart';
+import echarts from 'echarts/lib/echarts'
 
 function isPointsSame(points1, points2) {
     if (points1.length !== points2.length) {
@@ -228,9 +229,6 @@ function getVisualGradient(data, coordSys) {
         }
     }
     if (!visualMeta || coordSys.type !== 'cartesian2d') {
-        if (__DEV__) {
-            console.warn('Visual map on line style only support x or y dimension.');
-        }
         return;
     }
 
@@ -293,9 +291,9 @@ function getVisualGradient(data, coordSys) {
     return gradient;
 }
 
-export default ChartView.extend({
+echarts.extendChartView({
 
-    type: 'line',
+    type: 'evtline',
 
     init: function () {
         var lineGroup = new graphic.Group();
