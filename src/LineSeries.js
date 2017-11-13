@@ -3,7 +3,7 @@ import echarts from 'echarts/lib/echarts';
 
 echarts.extendSeriesModel({
 
-    type: 'series.line',
+    type: 'series.evtline',
 
     dependencies: ['grid', 'polar'],
 
