@@ -363,7 +363,7 @@ echarts.extendChartView({
                 stackedOnPoints = turnPointsIntoStep(stackedOnPoints, coordSys, step);
             }
 
-            polyline = this._newPolyline(points, coordSys, hasAnimation);
+            polyline = this._newPolyline(points, seriesModel.option);
             if (isAreaChart) {
                 polygon = this._newPolygon(
                     points, stackedOnPoints,
@@ -552,7 +552,7 @@ echarts.extendChartView({
      * @param {Array.<Array.<number>>} points
      * @private
      */
-    _newPolyline: function (points) {
+    _newPolyline: function (points, seriesModel) {
         var polyline = this._polyline;
         // Remove previous created polyline
         if (polyline) {
@@ -563,13 +563,24 @@ echarts.extendChartView({
             shape: {
                 points: points
             },
-            silent: true,
             z2: 10
         });
 
         this._lineGroup.add(polyline);
 
         this._polyline = polyline;
+
+        polyline.getSeriesModel = function () {
+            return seriesModel;
+        };
+
+        //绑定事件
+        if (option.onmouseover && Object.prototype.toString.call(option.onmouseover) === '[object Function]') {
+            polyline.on('mouseover', option.onmouseover);
+        }
+        if (option.onmouseout && Object.prototype.toString.call(option.onmouseout) === '[object Function]') {
+            polyline.on('mouseout', option.onmouseout);
+        }
 
         return polyline;
     },
