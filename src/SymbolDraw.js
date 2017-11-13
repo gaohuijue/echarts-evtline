@@ -46,7 +46,7 @@ symbolDrawProto.updateData = function (data, isIgnore) {
         symbolRotate: seriesModel.get('symbolRotate'),
         symbolOffset: seriesModel.get('symbolOffset'),
         hoverAnimation: seriesModel.get('hoverAnimation'),
-
+        onClick: seriesModel.get('symbolClick'),
         labelModel: seriesModel.getModel('label.normal'),
         hoverLabelModel: seriesModel.getModel('label.emphasis'),
         cursorStyle: seriesModel.get('cursor')

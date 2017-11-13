@@ -9,14 +9,14 @@ import {parsePercent} from 'echarts/lib/util/number';
 import {findLabelValueDim} from 'echarts/lib/chart/helper/labelHelper';
 
 
-function getSymbolSize(data, idx) {
+function getSymbolSize (data, idx) {
     var symbolSize = data.getItemVisual(idx, 'symbolSize');
     return symbolSize instanceof Array
         ? symbolSize.slice()
         : [+symbolSize, +symbolSize];
 }
 
-function getScale(symbolSize) {
+function getScale (symbolSize) {
     return [symbolSize[0] / 2, symbolSize[1] / 2];
 }
 
@@ -27,7 +27,7 @@ function getScale(symbolSize) {
  * @param {number} idx
  * @extends {module:zrender/graphic/Group}
  */
-function SymbolClz(data, idx, seriesScope) {
+function SymbolClz (data, idx, seriesScope) {
     graphic.Group.call(this);
 
     this.updateData(data, idx, seriesScope);
@@ -35,7 +35,7 @@ function SymbolClz(data, idx, seriesScope) {
 
 var symbolProto = SymbolClz.prototype;
 
-function driftSymbol(dx, dy) {
+function driftSymbol (dx, dy) {
     this.parent.drift(dx, dy);
 }
 
@@ -213,6 +213,7 @@ symbolProto._updateCommon = function (data, idx, symbolSize, seriesScope) {
     var hoverLabelModel = seriesScope && seriesScope.hoverLabelModel;
     var hoverAnimation = seriesScope && seriesScope.hoverAnimation;
     var cursorStyle = seriesScope && seriesScope.cursorStyle;
+    var onClick = seriesScope && seriesScope.symbolClick;
 
     if (!seriesScope || data.hasItemOption) {
         var itemModel = (seriesScope && seriesScope.itemModel)
@@ -230,6 +231,7 @@ symbolProto._updateCommon = function (data, idx, symbolSize, seriesScope) {
         hoverLabelModel = itemModel.getModel(emphasisLabelAccessPath);
         hoverAnimation = itemModel.getShallow('hoverAnimation');
         cursorStyle = itemModel.getShallow('cursor');
+        onClick = itemModel.getShallow('symbolClick')
     }
     else {
         hoverItemStyle = zrUtil.extend({}, hoverItemStyle);
@@ -277,7 +279,7 @@ symbolProto._updateCommon = function (data, idx, symbolSize, seriesScope) {
     symbolPath.off('mouseover')
         .off('mouseout')
         .off('emphasis')
-        .off('normal');
+        .off('normal').off('click');
 
     symbolPath.hoverStyle = hoverItemStyle;
 
@@ -288,7 +290,7 @@ symbolProto._updateCommon = function (data, idx, symbolSize, seriesScope) {
     var scale = getScale(symbolSize);
 
     if (hoverAnimation && seriesModel.isAnimationEnabled()) {
-        var onEmphasis = function() {
+        var onEmphasis = function () {
             var ratio = scale[1] / scale[0];
             this.animateTo({
                 scale: [
@@ -297,7 +299,7 @@ symbolProto._updateCommon = function (data, idx, symbolSize, seriesScope) {
                 ]
             }, 400, 'elasticOut');
         };
-        var onNormal = function() {
+        var onNormal = function () {
             this.animateTo({
                 scale: scale
             }, 400, 'elasticOut');
@@ -306,6 +308,11 @@ symbolProto._updateCommon = function (data, idx, symbolSize, seriesScope) {
             .on('mouseout', onNormal)
             .on('emphasis', onEmphasis)
             .on('normal', onNormal);
+    }
+    if (onClick) {
+        symbolPath.on('click', function () {
+            onClick.call(this, seriesModel.getDataParams(symbolPath.dataIndex))
+        });
     }
 };
 
