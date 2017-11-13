@@ -1,12 +1,13 @@
-var zrUtil = require('zrender/lib/core/util');
-var SymbolDraw = require('echarts/lib/chart/helper/SymbolDraw');
-var Symbol = require('echarts/lib/chart/helper/Symbol');
-var lineAnimationDiff = require('./lineAnimationDiff');
-var graphic = require('echarts/lib/util/graphic');
-var modelUtil = require('echarts/lib/util/model');
-var polyHelper = require('./poly');
-var ChartView = require('echarts/lib/view/Chart');
-var echarts = require('echarts/lib/echarts')
+// FIXME step not support polar
+
+import * as zrUtil from 'zrender/src/core/util';
+import SymbolDraw from './SymbolDraw';
+import SymbolClz from './Symbol';
+import lineAnimationDiff from './lineAnimationDiff';
+import * as graphic from 'echarts/lib/util/graphic';
+import * as modelUtil from 'echarts/lib/util/model';
+import {Polyline, Polygon} from './poly';
+import ChartView from 'echarts/lib/view/Chart';
 
 function isPointsSame(points1, points2) {
     if (points1.length !== points2.length) {
@@ -51,8 +52,20 @@ function sign(val) {
 function getStackedOnPoints(coordSys, data) {
     var baseAxis = coordSys.getBaseAxis();
     var valueAxis = coordSys.getOtherAxis(baseAxis);
-    var valueStart = baseAxis.onZero
-        ? 0 : valueAxis.scale.getExtent()[0];
+
+    var valueStart = 0;
+    if (!baseAxis.onZero) {
+        var extent = valueAxis.scale.getExtent();
+        if (extent[0] > 0) {
+            // Both positive
+            valueStart = extent[0];
+        }
+        else if (extent[1] < 0) {
+            // Both negative
+            valueStart = extent[1];
+        }
+        // If is one positive, and one negative, onZero shall be true
+    }
 
     var valueDim = valueAxis.dim;
 
@@ -63,8 +76,8 @@ function getStackedOnPoints(coordSys, data) {
         var stackedOn = data.stackedOn;
         // Find first stacked value with same sign
         while (stackedOn &&
-        sign(stackedOn.get(valueDim, idx)) === sign(val)
-            ) {
+            sign(stackedOn.get(valueDim, idx)) === sign(val)
+        ) {
             stackedOnSameSign = stackedOn;
             break;
         }
@@ -215,6 +228,9 @@ function getVisualGradient(data, coordSys) {
         }
     }
     if (!visualMeta || coordSys.type !== 'cartesian2d') {
+        if (__DEV__) {
+            console.warn('Visual map on line style only support x or y dimension.');
+        }
         return;
     }
 
@@ -277,9 +293,9 @@ function getVisualGradient(data, coordSys) {
     return gradient;
 }
 
-echarts.extendChartView({
+export default ChartView.extend({
 
-    type: 'evtline',
+    type: 'line',
 
     init: function () {
         var lineGroup = new graphic.Group();
@@ -349,7 +365,7 @@ echarts.extendChartView({
                 stackedOnPoints = turnPointsIntoStep(stackedOnPoints, coordSys, step);
             }
 
-            polyline = this._newPolyline(points, coordSys, hasAnimation, seriesModel);
+            polyline = this._newPolyline(points, coordSys, hasAnimation);
             if (isAreaChart) {
                 polygon = this._newPolygon(
                     points, stackedOnPoints,
@@ -468,8 +484,7 @@ echarts.extendChartView({
         this._step = step;
     },
 
-    dispose: function () {
-    },
+    dispose: function () {},
 
     highlight: function (seriesModel, ecModel, api, payload) {
         var data = seriesModel.getData();
@@ -484,7 +499,7 @@ echarts.extendChartView({
                     // Null data
                     return;
                 }
-                symbol = new Symbol(data, dataIndex);
+                symbol = new SymbolClz(data, dataIndex);
                 symbol.position = pt;
                 symbol.setZ(
                     seriesModel.get('zlevel'),
@@ -539,35 +554,24 @@ echarts.extendChartView({
      * @param {Array.<Array.<number>>} points
      * @private
      */
-    _newPolyline: function (points, coordSys, hasAnimation, seriesModel) {
-        var polyline = this._polyline, option = seriesModel.option;
+    _newPolyline: function (points) {
+        var polyline = this._polyline;
         // Remove previous created polyline
         if (polyline) {
             this._lineGroup.remove(polyline);
         }
 
-        polyline = new polyHelper.Polyline({
+        polyline = new Polyline({
             shape: {
                 points: points
             },
+            silent: true,
             z2: 10
         });
 
         this._lineGroup.add(polyline);
 
         this._polyline = polyline;
-
-        polyline.getSeriesModel = function () {
-            return seriesModel;
-        };
-
-        //绑定事件
-        if (option.onmouseover && Object.prototype.toString.call(option.onmouseover) === '[object Function]') {
-            polyline.on('mouseover', option.onmouseover);
-        }
-        if (option.onmouseout && Object.prototype.toString.call(option.onmouseout) === '[object Function]') {
-            polyline.on('mouseout', option.onmouseout);
-        }
 
         return polyline;
     },
@@ -585,7 +589,7 @@ echarts.extendChartView({
             this._lineGroup.remove(polygon);
         }
 
-        polygon = new polyHelper.Polygon({
+        polygon = new Polygon({
             shape: {
                 points: points,
                 stackedOnPoints: stackedOnPoints
@@ -700,10 +704,10 @@ echarts.extendChartView({
         });
 
         this._polyline =
-            this._polygon =
-                this._coordSys =
-                    this._points =
-                        this._stackedOnPoints =
-                            this._data = null;
+        this._polygon =
+        this._coordSys =
+        this._points =
+        this._stackedOnPoints =
+        this._data = null;
     }
 });

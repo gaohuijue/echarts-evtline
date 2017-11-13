@@ -1,13 +1,19 @@
-var createListFromArray = require('echarts/lib/chart/helper/createListFromArray');
-var echarts = require('echarts/lib/echarts');
+import createListFromArray from '../helper/createListFromArray';
+import SeriesModel from '../../model/Series';
 
-echarts.extendSeriesModel({
+export default SeriesModel.extend({
 
-    type: 'series.evtline',
+    type: 'series.line',
 
     dependencies: ['grid', 'polar'],
 
     getInitialData: function (option, ecModel) {
+        if (__DEV__) {
+            var coordSys = option.coordinateSystem;
+            if (coordSys !== 'polar' && coordSys !== 'cartesian2d') {
+                throw new Error('Line not support coordinateSystem besides cartesian and polar');
+            }
+        }
         return createListFromArray(option.data, this, ecModel);
     },
 
