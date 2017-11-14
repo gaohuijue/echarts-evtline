@@ -1,7 +1,6 @@
 'use strict';
 const PROD = process.argv.indexOf('-p') >= 0;
 const webpack = require('webpack');
-const path = require('path');
 
 module.exports = {
     entry: {
@@ -14,7 +13,7 @@ module.exports = {
         filename: PROD ? '[name].min.js' : '[name].js'
     },
     externals: {
-        'echarts/lib/echarts': 'echarts'
+        'echarts/src/echarts': 'echarts'
     },
     resolve: {
         alias: {
