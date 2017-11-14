@@ -4,10 +4,6 @@ module.exports = {
     parserOptions: {
         sourceType: 'module'
     },
-    "globals": {
-        "define": true,
-        "echarts": true
-    },
     env: {
         browser: true,
     },

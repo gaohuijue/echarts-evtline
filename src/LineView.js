@@ -4,11 +4,11 @@ import * as zrUtil from 'zrender/src/core/util';
 import SymbolDraw from './SymbolDraw';
 import SymbolClz from './Symbol';
 import lineAnimationDiff from './lineAnimationDiff';
-import * as graphic from 'echarts/lib/util/graphic';
-import * as modelUtil from 'echarts/lib/util/model';
+import * as graphic from 'echarts/src/util/graphic';
+import * as modelUtil from 'echarts/src/util/model';
 import {Polygon, Polyline} from './poly';
-import ChartView from 'echarts/lib/view/Chart';
-import echarts from 'echarts/lib/echarts';
+import ChartView from 'echarts/src/view/Chart';
+import * as echarts from 'echarts/src/echarts';
 
 function isPointsSame (points1, points2) {
     if (points1.length !== points2.length) {

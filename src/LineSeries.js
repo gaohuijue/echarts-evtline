@@ -1,5 +1,5 @@
-import createListFromArray from 'echarts/lib/chart/helper/createListFromArray';
-import echarts from 'echarts/lib/echarts';
+import createListFromArray from 'echarts/src/chart/helper/createListFromArray';
+import * as echarts from 'echarts/src/echarts';
 
 echarts.extendSeriesModel({
 

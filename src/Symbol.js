@@ -3,10 +3,10 @@
  */
 
 import * as zrUtil from 'zrender/lib/core/util';
-import {createSymbol} from 'echarts/lib/util/symbol';
-import * as graphic from 'echarts/lib/util/graphic';
-import {parsePercent} from 'echarts/lib/util/number';
-import {findLabelValueDim} from 'echarts/lib/chart/helper/labelHelper';
+import {createSymbol} from 'echarts/src/util/symbol';
+import * as graphic from 'echarts/src/util/graphic';
+import {parsePercent} from 'echarts/src/util/number';
+import {findLabelValueDim} from 'echarts/src/chart/helper/labelHelper';
 
 function getSymbolSize (data, idx) {
     var symbolSize = data.getItemVisual(idx, 'symbolSize');

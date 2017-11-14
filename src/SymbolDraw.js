@@ -2,7 +2,7 @@
  * @module echarts/chart/helper/SymbolDraw
  */
 
-import * as graphic from 'echarts/lib/util/graphic';
+import * as graphic from 'echarts/src/util/graphic';
 import SymbolClz from './Symbol';
 
 /**
