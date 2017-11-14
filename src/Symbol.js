@@ -8,7 +8,6 @@ import * as graphic from 'echarts/lib/util/graphic';
 import {parsePercent} from 'echarts/lib/util/number';
 import {findLabelValueDim} from 'echarts/lib/chart/helper/labelHelper';
 
-
 function getSymbolSize (data, idx) {
     var symbolSize = data.getItemVisual(idx, 'symbolSize');
     return symbolSize instanceof Array
@@ -154,8 +153,7 @@ symbolProto.updateData = function (data, idx, seriesScope) {
 
     if (isInit) {
         this._createSymbol(symbolType, data, idx, symbolSize);
-    }
-    else {
+    } else {
         var symbolPath = this.childAt(0);
         symbolPath.silent = false;
         graphic.updateProps(symbolPath, {
@@ -166,7 +164,7 @@ symbolProto.updateData = function (data, idx, seriesScope) {
     this._updateCommon(data, idx, symbolSize, seriesScope);
 
     if (isInit) {
-        var symbolPath = this.childAt(0);
+        symbolPath = this.childAt(0);
         var fadeIn = seriesScope && seriesScope.fadeIn;
 
         var target = {scale: symbolPath.scale.slice()};
@@ -231,9 +229,8 @@ symbolProto._updateCommon = function (data, idx, symbolSize, seriesScope) {
         hoverLabelModel = itemModel.getModel(emphasisLabelAccessPath);
         hoverAnimation = itemModel.getShallow('hoverAnimation');
         cursorStyle = itemModel.getShallow('cursor');
-        onClick = itemModel.getShallow('symbolClick')
-    }
-    else {
+        onClick = itemModel.getShallow('symbolClick');
+    } else {
         hoverItemStyle = zrUtil.extend({}, hoverItemStyle);
     }
 
@@ -311,7 +308,7 @@ symbolProto._updateCommon = function (data, idx, symbolSize, seriesScope) {
     }
     if (onClick) {
         symbolPath.on('click', function () {
-            onClick.call(this, seriesModel.getDataParams(symbolPath.dataIndex))
+            onClick.call(this, seriesModel.getDataParams(symbolPath.dataIndex));
         });
     }
 };

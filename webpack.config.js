@@ -1,5 +1,7 @@
-var PROD = process.argv.indexOf('-p') >= 0;
-var webpack = require('webpack');
+'use strict'
+const PROD = process.argv.indexOf('-p') >= 0;
+const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
     entry: {
@@ -25,15 +27,24 @@ module.exports = {
         })
     ] : [],
     module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015']
-                }
+        rules: [{
+            test: /\.js$/,
+            loader: 'eslint-loader',
+            enforce: "pre",
+            include: [path.join('src')],
+            exclude: /node_modules/,
+            options: {
+                formatter: require('eslint-friendly-formatter'),
+                failOnError: true
             }
-        ]
+        }],
+        loaders: [{
+            test: /\.js$/,
+            exclude: /(node_modules|bower_components)/,
+            loader: 'babel-loader',
+            query: {
+                presets: ['es2015']
+            }
+        }]
     }
 };

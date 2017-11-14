@@ -15,11 +15,11 @@ var v = [];
 var cp0 = [];
 var cp1 = [];
 
-function isPointNull(p) {
+function isPointNull (p) {
     return isNaN(p[0]) || isNaN(p[1]);
 }
 
-function drawSegment(
+function drawSegment (
     ctx, points, start, segLen, allLen,
     dir, smoothMin, smoothMax, smooth, smoothMonotone, connectNulls
 ) {
@@ -41,8 +41,7 @@ function drawSegment(
         if (idx === start) {
             ctx[dir > 0 ? 'moveTo' : 'lineTo'](p[0], p[1]);
             v2Copy(cp0, p);
-        }
-        else {
+        } else {
             if (smooth > 0) {
                 var nextIdx = idx + dir;
                 var nextP = points[nextIdx];
@@ -56,12 +55,11 @@ function drawSegment(
 
                 var ratioNextSeg = 0.5;
                 var prevP = points[prevIdx];
-                var nextP = points[nextIdx];
+                nextP = points[nextIdx];
                 // Last point
                 if (!nextP || isPointNull(nextP)) {
                     v2Copy(cp1, p);
-                }
-                else {
+                } else {
                     // If next data is null in not connect case
                     if (isPointNull(nextP) && !connectNulls) {
                         nextP = p;
@@ -75,8 +73,7 @@ function drawSegment(
                         var dim = smoothMonotone === 'x' ? 0 : 1;
                         lenPrevSeg = Math.abs(p[dim] - prevP[dim]);
                         lenNextSeg = Math.abs(p[dim] - nextP[dim]);
-                    }
-                    else {
+                    } else {
                         lenPrevSeg = vec2.dist(p, prevP);
                         lenNextSeg = vec2.dist(p, nextP);
                     }
@@ -99,8 +96,7 @@ function drawSegment(
                 );
                 // cp0 of next segment
                 scaleAndAdd(cp0, p, v, smooth * ratioNextSeg);
-            }
-            else {
+            } else {
                 ctx.lineTo(p[0], p[1]);
             }
         }
@@ -112,7 +108,7 @@ function drawSegment(
     return k;
 }
 
-function getBoundingBox(points, smoothConstraint) {
+function getBoundingBox (points, smoothConstraint) {
     var ptMin = [Infinity, Infinity];
     var ptMax = [-Infinity, -Infinity];
     if (smoothConstraint) {

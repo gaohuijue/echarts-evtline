@@ -1,7 +1,5 @@
 define(function (require) {
-
     var zrUtil = require('zrender/lib/core/util');
-    var echarts = require('echarts/lib/echarts');
     var PRIORITY = echarts.PRIORITY;
 
     require('./LineSeries');

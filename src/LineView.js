@@ -8,9 +8,9 @@ import * as graphic from 'echarts/lib/util/graphic';
 import * as modelUtil from 'echarts/lib/util/model';
 import {Polygon, Polyline} from './poly';
 import ChartView from 'echarts/lib/view/Chart';
-import echarts from 'echarts/lib/echarts'
+import echarts from 'echarts/lib/echarts';
 
-function isPointsSame(points1, points2) {
+function isPointsSame (points1, points2) {
     if (points1.length !== points2.length) {
         return;
     }
@@ -24,11 +24,11 @@ function isPointsSame(points1, points2) {
     return true;
 }
 
-function getSmooth(smooth) {
+function getSmooth (smooth) {
     return typeof (smooth) === 'number' ? smooth : (smooth ? 0.3 : 0);
 }
 
-function getAxisExtentWithGap(axis) {
+function getAxisExtentWithGap (axis) {
     var extent = axis.getGlobalExtent();
     if (axis.onBand) {
         // Remove extra 1px to avoid line miter in clipped edge
@@ -40,7 +40,7 @@ function getAxisExtentWithGap(axis) {
     return extent;
 }
 
-function sign(val) {
+function sign (val) {
     return val >= 0 ? 1 : -1;
 }
 
@@ -50,7 +50,7 @@ function sign(val) {
  * @param {Array.<Array.<number>>} points
  * @private
  */
-function getStackedOnPoints(coordSys, data) {
+function getStackedOnPoints (coordSys, data) {
     var baseAxis = coordSys.getBaseAxis();
     var valueAxis = coordSys.getOtherAxis(baseAxis);
 
@@ -60,8 +60,7 @@ function getStackedOnPoints(coordSys, data) {
         if (extent[0] > 0) {
             // Both positive
             valueStart = extent[0];
-        }
-        else if (extent[1] < 0) {
+        } else if (extent[1] < 0) {
             // Both negative
             valueStart = extent[1];
         }
@@ -76,11 +75,11 @@ function getStackedOnPoints(coordSys, data) {
         var stackedOnSameSign;
         var stackedOn = data.stackedOn;
         // Find first stacked value with same sign
-        while (stackedOn &&
-            sign(stackedOn.get(valueDim, idx)) === sign(val)
-        ) {
-            stackedOnSameSign = stackedOn;
-            break;
+        if (stackedOn) {
+            while (sign(stackedOn.get(valueDim, idx)) === sign(val)) {
+                stackedOnSameSign = stackedOn;
+                break;
+            }
         }
         var stackedData = [];
         stackedData[baseDataOffset] = data.get(baseAxis.dim, idx);
@@ -91,7 +90,7 @@ function getStackedOnPoints(coordSys, data) {
     }, true);
 }
 
-function createGridClipShape(cartesian, hasAnimation, seriesModel) {
+function createGridClipShape (cartesian, hasAnimation, seriesModel) {
     var xExtent = getAxisExtentWithGap(cartesian.getAxis('x'));
     var yExtent = getAxisExtentWithGap(cartesian.getAxis('y'));
     var isHorizontal = cartesian.getBaseAxis().isHorizontal();
@@ -106,8 +105,7 @@ function createGridClipShape(cartesian, hasAnimation, seriesModel) {
     if (isHorizontal) {
         y -= expandSize;
         height += expandSize * 2;
-    }
-    else {
+    } else {
         x -= expandSize;
         width += expandSize * 2;
     }
@@ -134,7 +132,7 @@ function createGridClipShape(cartesian, hasAnimation, seriesModel) {
     return clipPath;
 }
 
-function createPolarClipShape(polar, hasAnimation, seriesModel) {
+function createPolarClipShape (polar, hasAnimation, seriesModel) {
     var angleAxis = polar.getAngleAxis();
     var radiusAxis = polar.getRadiusAxis();
 
@@ -167,13 +165,13 @@ function createPolarClipShape(polar, hasAnimation, seriesModel) {
     return clipPath;
 }
 
-function createClipShape(coordSys, hasAnimation, seriesModel) {
+function createClipShape (coordSys, hasAnimation, seriesModel) {
     return coordSys.type === 'polar'
         ? createPolarClipShape(coordSys, hasAnimation, seriesModel)
         : createGridClipShape(coordSys, hasAnimation, seriesModel);
 }
 
-function turnPointsIntoStep(points, coordSys, stepTurnAt) {
+function turnPointsIntoStep (points, coordSys, stepTurnAt) {
     var baseAxis = coordSys.getBaseAxis();
     var baseIndex = baseAxis.dim === 'x' || baseAxis.dim === 'radius' ? 0 : 1;
 
@@ -213,7 +211,7 @@ function turnPointsIntoStep(points, coordSys, stepTurnAt) {
     return stepPoints;
 }
 
-function getVisualGradient(data, coordSys) {
+function getVisualGradient (data, coordSys) {
     var visualMetaList = data.getVisual('visualMeta');
     if (!visualMetaList || !visualMetaList.length || !data.count()) {
         // When data.count() is 0, gradient range can not be calculated.
@@ -330,8 +328,8 @@ echarts.extendChartView({
 
         var showSymbol = seriesModel.get('showSymbol');
 
-        var isSymbolIgnore = showSymbol && !isCoordSysPolar && !seriesModel.get('showAllSymbol')
-            && this._getSymbolIgnoreFunc(data, coordSys);
+        var isSymbolIgnore = showSymbol && !isCoordSysPolar && !seriesModel.get('showAllSymbol') &&
+            this._getSymbolIgnoreFunc(data, coordSys);
 
         // Remove temporary symbols
         var oldData = this._data;
@@ -371,16 +369,14 @@ echarts.extendChartView({
                 );
             }
             lineGroup.setClipPath(createClipShape(coordSys, true, seriesModel));
-        }
-        else {
+        } else {
             if (isAreaChart && !polygon) {
                 // If areaStyle is added
                 polygon = this._newPolygon(
                     points, stackedOnPoints,
                     coordSys, hasAnimation
                 );
-            }
-            else if (polygon && !isAreaChart) {
+            } else if (polygon && !isAreaChart) {
                 // If areaStyle is removed
                 lineGroup.remove(polygon);
                 polygon = this._polygon = null;
@@ -401,15 +397,14 @@ echarts.extendChartView({
 
             // In the case data zoom triggerred refreshing frequently
             // Data may not change if line has a category axis. So it should animate nothing
-            if (!isPointsSame(this._stackedOnPoints, stackedOnPoints)
-                || !isPointsSame(this._points, points)
+            if (!isPointsSame(this._stackedOnPoints, stackedOnPoints) ||
+                !isPointsSame(this._points, points)
             ) {
                 if (hasAnimation) {
                     this._updateAnimation(
                         data, stackedOnPoints, coordSys, api, step
                     );
-                }
-                else {
+                } else {
                     // Not do it in update with animation
                     if (step) {
                         // TODO If stacked series is not step
@@ -513,8 +508,7 @@ echarts.extendChartView({
                 this.group.add(symbol);
             }
             symbol.highlight();
-        }
-        else {
+        } else {
             // Highlight whole series
             ChartView.prototype.highlight.call(
                 this, seriesModel, ecModel, api, payload
@@ -531,13 +525,11 @@ echarts.extendChartView({
                 if (symbol.__temp) {
                     data.setItemGraphicEl(dataIndex, null);
                     this.group.remove(symbol);
-                }
-                else {
+                } else {
                     symbol.downplay();
                 }
             }
-        }
-        else {
+        } else {
             // FIXME
             // can not downplay completely.
             // Downplay whole series
@@ -574,7 +566,7 @@ echarts.extendChartView({
             return seriesModel;
         };
 
-        //绑定事件
+        // 绑定事件
         if (seriesModel.onmouseover && Object.prototype.toString.call(seriesModel.onmouseover) === '[object Function]') {
             polyline.on('mouseover', seriesModel.onmouseover);
         }
@@ -683,7 +675,7 @@ echarts.extendChartView({
                 if (el) {
                     updatedDataInfo.push({
                         el: el,
-                        ptIdx: i    // Index of points
+                        ptIdx: i // Index of points
                     });
                 }
             }

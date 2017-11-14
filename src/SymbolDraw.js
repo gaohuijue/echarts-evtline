@@ -24,8 +24,8 @@ function symbolNeedsDraw (data, idx, isIgnore) {
     // if (point && point.hasOwnProperty('point')) {
     //     point = point.point;
     // }
-    return point && !isNaN(point[0]) && !isNaN(point[1]) && !(isIgnore && isIgnore(idx))
-        && data.getItemVisual(idx, 'symbol') !== 'none';
+    return point && !isNaN(point[0]) && !isNaN(point[1]) && !(isIgnore && isIgnore(idx)) &&
+        data.getItemVisual(idx, 'symbol') !== 'none';
 }
 
 /**
@@ -72,8 +72,7 @@ symbolDrawProto.updateData = function (data, isIgnore) {
             if (!symbolEl) {
                 symbolEl = new SymbolCtor(data, newIdx);
                 symbolEl.attr('position', point);
-            }
-            else {
+            } else {
                 symbolEl.updateData(data, newIdx, seriesScope);
                 graphic.updateProps(symbolEl, {
                     position: point
@@ -117,8 +116,7 @@ symbolDrawProto.remove = function (enableAnimation) {
                     group.remove(el);
                 });
             });
-        }
-        else {
+        } else {
             group.removeAll();
         }
     }

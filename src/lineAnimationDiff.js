@@ -3,11 +3,11 @@
 // 'zrender/src/core/arrayDiff' has been used before, but it did
 // not do well in performance when roam with fixed dataZoom window.
 
-function sign(val) {
+function sign (val) {
     return val >= 0 ? 1 : -1;
 }
 
-function getStackedOnPoint(coordSys, data, idx) {
+function getStackedOnPoint (coordSys, data, idx) {
     var baseAxis = coordSys.getBaseAxis();
     var valueAxis = coordSys.getOtherAxis(baseAxis);
     var valueStart = baseAxis.onZero
@@ -20,11 +20,11 @@ function getStackedOnPoint(coordSys, data, idx) {
     var stackedOn = data.stackedOn;
     var val = data.get(valueDim, idx);
     // Find first stacked value with same sign
-    while (stackedOn &&
-        sign(stackedOn.get(valueDim, idx)) === sign(val)
-    ) {
-        stackedOnSameSign = stackedOn;
-        break;
+    if (stackedOn) {
+        while (sign(stackedOn.get(valueDim, idx)) === sign(val)) {
+            stackedOnSameSign = stackedOn;
+            break;
+        }
     }
     var stackedData = [];
     stackedData[baseDataOffset] = data.get(baseAxis.dim, idx);
@@ -57,7 +57,7 @@ function getStackedOnPoint(coordSys, data, idx) {
 //     }
 // }
 
-function diffData(oldData, newData) {
+function diffData (oldData, newData) {
     var diffResult = [];
 
     newData.diff(oldData)
@@ -140,7 +140,7 @@ export default function (
                 rawIndices.push(newData.getRawIndex(idx));
                 break;
             case '-':
-                var idx = diffItem.idx;
+                idx = diffItem.idx;
                 var rawIndex = oldData.getRawIndex(idx);
                 // Data is replaced. In the case of dynamic data queue
                 // FIXME FIXME FIXME
@@ -158,8 +158,7 @@ export default function (
                     );
 
                     rawIndices.push(rawIndex);
-                }
-                else {
+                } else {
                     pointAdded = false;
                 }
         }
@@ -184,8 +183,8 @@ export default function (
     var sortedNextStackedPoints = [];
 
     var sortedStatus = [];
-    for (var i = 0; i < sortedIndices.length; i++) {
-        var idx = sortedIndices[i];
+    for (i = 0; i < sortedIndices.length; i++) {
+        idx = sortedIndices[i];
         sortedCurrPoints[i] = currPoints[idx];
         sortedNextPoints[i] = nextPoints[idx];
 
