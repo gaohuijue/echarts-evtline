@@ -1,5 +1,21 @@
 # 可以配置事件的折线图
-### 鼠标移入折线或移出折线可以添加事件回调
-### 鼠标点击Symbol可以添加事件回调
-需添加eslintrc
-文档待续。。。
+```js
+.setOption({
+    // ...
+    series:[
+        {
+            type:'evtline',
+            // The configuration is the same as "line" chart.
+            onmouseout:function(){},
+            onmouseover:function(){},
+            symbolClick:function(data,beautiBox){
+                //beautiBox是自己写的组件
+            }
+        }
+        // ...
+    ]
+    // ...    
+})
+    
+
+```
