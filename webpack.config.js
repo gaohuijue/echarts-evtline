@@ -31,10 +31,13 @@ module.exports = {
             test: /\.js$/,
             loader: 'eslint-loader',
             enforce: 'pre',
-            include: [path.join('src')],
             exclude: /node_modules/,
             options: {
-                failOnError: true
+                failOnError: true,
+                outputReport: {
+                    filePath: 'checkstyle.xml',
+                    formatter: require ('eslint/lib/formatters/checkstyle')
+                }
             }
         }],
         loaders: [{
