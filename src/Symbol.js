@@ -213,7 +213,7 @@ symbolProto._updateCommon = function (data, idx, symbolSize, seriesScope) {
     var hoverLabelModel = seriesScope && seriesScope.hoverLabelModel;
     var hoverAnimation = seriesScope && seriesScope.hoverAnimation;
     var cursorStyle = seriesScope && seriesScope.cursorStyle;
-    var onClick = seriesScope && seriesScope.symbolClick;
+    var onClick = seriesScope && seriesScope.onClick;
 
     if (!seriesScope || data.hasItemOption) {
         var itemModel = (seriesScope && seriesScope.itemModel)
