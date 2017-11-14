@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 const PROD = process.argv.indexOf('-p') >= 0;
 const webpack = require('webpack');
 const path = require('path');
@@ -30,17 +30,16 @@ module.exports = {
         rules: [{
             test: /\.js$/,
             loader: 'eslint-loader',
-            enforce: "pre",
+            enforce: 'pre',
             include: [path.join('src')],
             exclude: /node_modules/,
             options: {
-                formatter: require('eslint-friendly-formatter'),
                 failOnError: true
             }
         }],
         loaders: [{
             test: /\.js$/,
-            exclude: /(node_modules|bower_components)/,
+            exclude: /node_modules/,
             loader: 'babel-loader',
             query: {
                 presets: ['es2015']
